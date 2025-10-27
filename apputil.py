@@ -3,6 +3,20 @@ import numpy as np
 
 class GroupEstimate:
     def __init__(self, estimate="mean"):
+        """
+        Fit a group-level estimator that computes mean or median
+        of a target variable y for groups defined by categorical features X.
+
+        Parameters:
+        estimate: str, either "mean" or "median"
+            The type of group-level estimate to compute.
+
+        Raises:
+            ValueError: if estimate is not "mean" or "median"
+
+        Returns:
+        self
+        """
         if estimate not in ["mean", "median"]:
             raise ValueError("estimate must be either 'mean' or 'median'")
         self.estimate = estimate
@@ -13,6 +27,16 @@ class GroupEstimate:
         """
         Fit the estimator by grouping categorical features in X
         and computing mean/median of y for each group.
+        
+        Parameters:
+            X: pd.DataFrame - categorical features
+            y: pd.Series or np.array - continuous target variable to estimate
+        
+        Raises:
+            ValueError: if lengths of X and y do not match
+
+        Returns:
+        self
         """
         # Ensure X is a DataFrame
         if not isinstance(X, pd.DataFrame):
@@ -41,6 +65,15 @@ class GroupEstimate:
     def predict(self, X_):
         """
         Predict estimates for new observations.
+
+        Parameters:
+            X_: pd.DataFrame - new categorical features for prediction
+
+        Raises:
+            RuntimeError: if fit has not been called before predict
+        
+        Returns:
+            np.array - predicted group-level estimates
         """
         if self.group_estimates_ is None:
             raise RuntimeError("You must call .fit() before .predict()")
